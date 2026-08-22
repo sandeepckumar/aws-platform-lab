@@ -1,0 +1,74 @@
+name: dev-workflow
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/environments/dev/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+job:
+  plan:
+    name: Run Terraform Plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::496113530799:role/tf-lab-github
+          aws-region: ap-south-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.15.3
+
+      - name: Terraform init
+        working-directory: ./terraform/environments/dev
+        run: terraform init
+
+      - name: Terraform plan
+        working-directory: ./terraform/environments/dev
+        run: terraform plan -out=tfplan
+
+      - name: Upload Terraform plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform/tfplan
+
+  apply:
+    name: Terraform apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::496113530799:role/tf-lab-github
+          aws-region: ap-south-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.15.3
+
+      - name: Download TF Plan from Cache
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform
+
+      - name: Terraform apply
+        working-directory: ./terraform/environments/dev
+        run: terraform apply -auto-approve tfplan
