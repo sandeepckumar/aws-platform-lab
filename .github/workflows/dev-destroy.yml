@@ -1,4 +1,4 @@
-name: Destroy Workflow for dev
+name: dev-destroy-workflow
 on: workflow_dispatch
 
 permissions:
@@ -29,6 +29,6 @@ jobs:
         working-directory: ./terraform/environments/dev
         run: terraform init
 
-      - name: Terraform destory
-        working-directory: ./terraform/environements/dev
-        run: terraform destory -auto-approve
+      - name: Terraform destroy
+        working-directory: ./terraform/environments/dev
+        run: terraform destroy -auto-approve

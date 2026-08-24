@@ -1,4 +1,4 @@
-name: dev-workflow
+name: dev-deploy-workflow
 on:
   push:
     branches:
