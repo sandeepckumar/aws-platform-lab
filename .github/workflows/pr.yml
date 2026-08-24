@@ -1,0 +1,75 @@
+name: pr-workflow
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - edited
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  lint:
+    name: Lint and Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.15.3
+
+      - name: Terraform Format
+        working-directory: ./terraform
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Validate
+        working-directory: ./terraform
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Setup TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint
+        run: tflint --format=compact
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    env:
+      TF_IN_AUTOMATION: "true"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.15.3
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1
+        with:
+          working_directory: ./terraform
+          additional_args: --soft-fail-severities LOW,MEDIUM
+
+      - name: Upload tfsec SARIF to Github
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
