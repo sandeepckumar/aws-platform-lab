@@ -64,7 +64,7 @@ jobs:
           terraform_version: 1.15.3
 
       - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1
+        uses: aquasecurity/tfsec-action@v1.0.3
         with:
           working_directory: ./terraform
           additional_args: --soft-fail-severities LOW,MEDIUM
