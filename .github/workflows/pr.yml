@@ -1,6 +1,6 @@
 name: pr-workflow
 on:
-  pull-request:
+  pull_request:
     branches:
       - main
     types:
