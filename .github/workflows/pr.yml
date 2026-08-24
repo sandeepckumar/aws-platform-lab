@@ -66,7 +66,7 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           working_directory: ./terraform
-          additional_args: -s -m MEDIUM
+          additional_args: -s -m LOW
 
       - name: Upload tfsec SARIF to Github
         uses: github/codeql-action/upload-sarif@v3
