@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "terraform/environments/dev/**"
+  workflow_dispatch:
 
 permissions:
   id-token: write
