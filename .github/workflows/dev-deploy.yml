@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: ./terraform/environments/dev/tfplan
+          path: ./terraform/environments/dev/
 
   apply:
     name: Terraform apply
@@ -88,7 +88,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan
-          path: ./terraform/environments/dev/tfplan
+          path: ./terraform/environments/dev/
 
       - name: Terraform apply
         working-directory: ./terraform/environments/dev
