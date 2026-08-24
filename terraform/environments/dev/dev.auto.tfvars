@@ -29,3 +29,4 @@ subnets = {
 }
 
 create_igw = true
+igw_name = "dev-igw"
