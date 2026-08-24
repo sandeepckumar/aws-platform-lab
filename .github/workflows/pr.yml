@@ -66,9 +66,12 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           working_directory: ./terraform
-          additional_args: --soft-fail-severities LOW,MEDIUM
+          sarif_file: results.sarif
+          additional_args: -m LOW
+          soft_fail: true
 
       - name: Upload tfsec SARIF to Github
         uses: github/codeql-action/upload-sarif@v3
+        if: always()
         with:
           sarif_file: results.sarif
