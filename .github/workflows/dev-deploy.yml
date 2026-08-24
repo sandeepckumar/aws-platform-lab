@@ -53,9 +53,9 @@ jobs:
         working-directory: ./terraform/environments/dev
         run: terraform init
 
-          - name: Terraform plan
-            working-directory: ./terraform/environments/dev
-            run: terraform plan -input=false -out=tfplan
+      - name: Terraform plan
+        working-directory: ./terraform/environments/dev
+        run: terraform plan -input=false -out=tfplan
 
       - name: Upload Terraform plan
         uses: actions/upload-artifact@v4
