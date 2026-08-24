@@ -48,6 +48,7 @@ jobs:
   apply:
     name: Terraform apply
     runs-on: ubuntu-latest
+    needs: plan
 
     steps:
       - name: Checkout code
