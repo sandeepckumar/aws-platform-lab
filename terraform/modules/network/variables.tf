@@ -16,3 +16,20 @@ variable "subnets" {
     }
   ))
 }
+
+variable "create_igw" {
+  description = "Need internet gateway?"
+  type        = bool
+  default     = false
+}
+
+variable "igw_name" {
+  description = "Name for the IGW"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.create_igw ? var.igw_name != "" : true
+    error_message = "igw_name is required when create_igw is set to true."
+  }
+}
